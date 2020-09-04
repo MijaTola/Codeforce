@@ -1,0 +1,45 @@
+#include <iostream>
+#include <algorithm>
+#include <queue>
+#include <stack>
+#include <vector>
+#include <climits>
+#include <map>
+#include <set>
+#include <cassert>
+#include <cstdio>
+#include <cstring>
+#include <cmath>
+#include <deque>
+#include <string> 
+#include <sstream>
+#include <cstdlib>
+#include <unordered_set>
+#include <unordered_map>
+
+using namespace std;
+string s;
+int main(){
+
+    cin >> s;
+    string p = s;
+    sort(p.begin(),p.end());
+    string u = "";
+    vector<char> t;
+    cout << p << "\n";
+    vector<char> t;
+    :w
+    int index = 0;
+    for (int i = 0; i < (int) s.size(); ++i){
+        if(s[i] == p[index]){
+            u += s[i];
+            index++;
+        }else t.push_back(s[i]);
+    }
+    for (int i = t.size()-1; i >= 0; --i)
+        u += t[i];
+    
+    cout << u << "\n";
+    return 0;
+}
+
