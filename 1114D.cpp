@@ -3,28 +3,38 @@
 using namespace std;
 
 int n;
-int v[5010];
-int dp[5010][5010];
-vector<int> b;
+vector<int> v;
+int dp[5010][5010][2];
 
-//5 4 1 4 5 5 1 5
+int f(int l, int r,  int flag) {
+    if(l == 0 and r == n - 1) return 0;
 
-int f(int l, int r, bool flag) {
-    if(l > r) return 0;
-    int ans = 1e9;
-    for (int i = l; i <= r; ++i) {
-        if(v[i] == v[l]) {
-            
-        }
-    }
+    int &ans = dp[l][r][flag];
+
+    if(ans != -1) return ans;
+    ans = 1e9;
+    int val = flag  ? v[r] : v[l];
+
+    if(l) ans = min(ans, f(l - 1, r, 0) + (val != v[l - 1]));
+    if(r + 1 < n) ans = min(ans, f(l, r + 1, 1) + (val != v[r + 1]));
+
+    return ans;
 }
-
 int main() {
-    ios::sync_with_stdio(false); cin.tie(0);
+
     memset(dp, -1, sizeof dp);
     cin >> n;
-    for (int i = 0; i < n; ++i)
-        cin >> v[i];
-      return 0;
+    v.resize(n);
+    for (int &x: v)
+        cin >> x;
+
+    int ans = 1e9;
+    for (int i = 0; i < n; ++i) {
+        ans = min(ans, f(i,i,0));
+    }
+
+    cout << ans << "\n";
+    
+    return 0;
 }
 

@@ -3,71 +3,86 @@
 using namespace std;
 
 int n;
-long long d[200010];
+vector<int> G[100100];
+int depth[100100];
+vector<long long> e;
 const int mod = 1e9 + 7;
-vector<long long> G[200010],b;
 
-int dfs(int u, int p = -1) {
-    int ans = 1;
+void dfs(int u, int p = -1) {
+    depth[u] = 1;
     for (int v: G[u]) {
-        if(v != p) {
-            int val = dfs(v,u);
-            b.push_back(1LL * (n - val) * val);
-            ans += val;
-        }
+        if(v == p) continue;
+        dfs(v, u);
+        depth[u] += depth[v];
+        long long abajo = depth[v];
+        long long arriba = n - depth[v];
+        e.push_back(1LL * arriba * abajo);
     }
-    return ans;
+
 }
 
-
 int main() {
-    
+    //ios::sync_with_stdio(false); cin.tie(0);
     int t;
     cin >> t;
 
     while(t--) {
-        b.clear();
+
         cin >> n;
-        for (int i = 1; i <= n; ++i) {
+
+        for (int i = 1; i <= n + 10; ++i) {
             G[i].clear();
-            d[i] = 0;
+            depth[i] = 0;
         }
+
         for (int i = 0; i < n - 1; ++i) {
             int x,y;
-            cin >>  x >> y;
+            cin >> x >> y;
             G[x].push_back(y);
             G[y].push_back(x);
         }
 
-        int m;
-        cin >> m;
-        vector<long long> v(m);
-
-        for (auto &x: v)
-            cin >> x;
-
-        
         dfs(1);
 
-        sort(v.begin(), v.end());
-        sort(b.begin(), b.end());
+        int m;
+        cin >> m;
+
+        vector<long long> f;
+
+        for (int i = 0; i < m; ++i) {
+            int x;
+            cin >> x;
+            f.push_back(x);
+        }
+
+        sort(f.begin(), f.end());
+        sort(e.begin(), e.end());
+
+
+        while(f.size() > e.size()) {
+            long long x = f.back();
+            f.pop_back();
+            f.back() *= x;
+            f.back() %= mod;
+        }
 
         long long ans = 0;
-        while(v.size() and b.size()) {
-            ans += (1LL * v.back() * b.back()) % mod;
+        while(e.size() and f.size()) {
+            ans += (e.back() * f.back()) % mod;
             ans %= mod;
-            v.pop_back();
-            b.pop_back();
+            e.pop_back();
+            f.pop_back();
         }
 
-        while(b.size()) {
-            ans += b.back();
+        while(e.size()) {
+            ans += e.back();
             ans %= mod;
-            b.pop_back();
+            e.pop_back();
         }
+
         cout << ans << "\n";
 
     }
+
     return 0;
 }
-
